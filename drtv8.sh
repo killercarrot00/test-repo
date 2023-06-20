@@ -11,7 +11,7 @@ if [ $? -eq 0 ]; then
     echo OK
 else
     echo "Make problem..."
-    exit()
+    exit 1
 fi
 insmod loggersys.ko
 cp loggersys.ko /lib/modules/
